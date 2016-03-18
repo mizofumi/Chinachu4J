@@ -51,7 +51,6 @@ public class Chinachu4J {
         return programs;
     }
 
-    // 全チャンネルの番組表
     public Program[] getAllSchedule() throws KeyManagementException, NoSuchAlgorithmException, IOException, JSONException{
         String allSchedule = chinachuHttp.getServer(baseURL + "schedule/programs.json");
         JSONArray jAll = new JSONArray(allSchedule);
@@ -61,7 +60,6 @@ public class Chinachu4J {
         return allPrograms;
     }
 
-    // 全チャンネルから番組検索
     public Program[] searchProgram(String query) throws KeyManagementException, NoSuchAlgorithmException, IOException, JSONException{
         Program[] allSchedule = getAllSchedule();
         ArrayList<Program> array = new ArrayList<Program>();
@@ -72,9 +70,6 @@ public class Chinachu4J {
         return (Program[])array.toArray(new Program[0]);
     }
 
-    // 現在放送されている番組から局名のみを抽出
-    // 「局名,局id」形式
-    // for example "ＮＨＫ総合１・東京,GR_1024"
     public String[] getChannelList() throws KeyManagementException, NoSuchAlgorithmException, IOException, JSONException{
         JSONArray channelJson = new JSONArray(chinachuHttp.getServer(baseURL + "schedule/broadcasting.json"));
         String[] channelList = new String[channelJson.length()];
@@ -85,7 +80,6 @@ public class Chinachu4J {
         return channelList;
     }
 
-    // 予約済の取得
     public Reserve[] getReserves() throws KeyManagementException, NoSuchAlgorithmException, IOException, JSONException{
         String reserves = chinachuHttp.getServer(baseURL + "reserves.json");
         JSONArray jreserves = new JSONArray(reserves);
@@ -95,13 +89,11 @@ public class Chinachu4J {
         return reserve;
     }
 
-    // 予約済の取得
     public Reserve getReserve(String programid) throws KeyManagementException, NoSuchAlgorithmException, IOException, JSONException{
         String reserves = chinachuHttp.getServer(baseURL + "reserves/" + programid + ".json");
         return getReserve(new JSONObject(reserves));
     }
 
-    // 録画中の取得
     public Recording[] getRecordings() throws KeyManagementException, NoSuchAlgorithmException, IOException, JSONException{
         String recording = chinachuHttp.getServer(baseURL + "recording.json");
         JSONArray jrecording = new JSONArray(recording);
@@ -117,7 +109,6 @@ public class Chinachu4J {
     }
 
     /*
-    // 録画中のキャプチャを取得
     public Bitmap getRecordingImage(String id, String size) throws KeyManagementException, NoSuchAlgorithmException, IOException{
         if(id == null)
             return null;
@@ -131,7 +122,6 @@ public class Chinachu4J {
     }
     */
 
-    // 録画済みの取得
     public Recorded[] getRecorded() throws KeyManagementException, NoSuchAlgorithmException, IOException, JSONException{
         String recorded = chinachuHttp.getServer(baseURL + "recorded.json");
         JSONArray jrecorded = new JSONArray(recorded);
@@ -147,7 +137,6 @@ public class Chinachu4J {
     }
 
     /*
-    // 録画済みのキャプチャを取得
     public Bitmap getRecordedImage(String id, int pos, String size) throws KeyManagementException, NoSuchAlgorithmException, IOException{
         if(id == null)
             return null;
@@ -163,31 +152,26 @@ public class Chinachu4J {
     }
     */
 
-    // 録画中のストリーミング再生（エンコなし）
     public String getNonEncRecordingMovie(String programId){
         return getIncludeUserPass() + "recording/" + programId + "/watch.m2ts?f=mpegts&c:v=copy&c:a=copy";
     }
 
-    // 録画中のストリーミング（エンコ有り）
     // type: m2ts, f4v, flv, webm, asf
     public String getEncRecordingMovie(String programId, String type, String[] params){
         String base = getIncludeUserPass() + "recording/" + programId + "/watch." + type + "?";
         return getIncludeEncParams(base, params);
     }
 
-    // 録画済みのストリーミング再生（エンコなし）
     public String getNonEncRecordedMovie(String programId){
         return getIncludeUserPass() + "recorded/" + programId + "/watch.m2ts?f=mpegts&c:v=copy&c:a=copy";
     }
 
-    // 録画済みのストリーミング再生（エンコ有り）
     // type: m2ts, f4v, flv, webm, asf
     public String getEncRecordedMovie(String programId, String type, String[] params){
         String base = getIncludeUserPass() + "recorded/" + programId + "/watch." + type + "?";
         return getIncludeEncParams(base, params);
     }
 
-    // ルールの取得
     public Rule[] getRules() throws KeyManagementException, NoSuchAlgorithmException, IOException, JSONException{
         String rule = chinachuHttp.getServer(baseURL + "rules.json");
         JSONArray jrule = new JSONArray(rule);
@@ -197,14 +181,11 @@ public class Chinachu4J {
         return rules;
     }
 
-    // ルールの取得
     public Rule getRules(String num) throws KeyManagementException, NoSuchAlgorithmException, IOException, JSONException{
         String rule = chinachuHttp.getServer(baseURL + "rules/"+num+".json");
         return getRule(new JSONObject(rule));
     }
 
-    // UsernameとPasswordを含んだbaseURLを返却
-    // ストリーミング視聴向けのURLを作成するときに使う
     private String getIncludeUserPass(){
         String includeURL = null;
         if(baseURL.startsWith("https://")) {
@@ -219,15 +200,6 @@ public class Chinachu4J {
         return includeURL;
     }
 
-    // エンコ有りストリーミングURLにパラメータを付ける
-    // パラメータ達にnullが含まれていたらそれは含めない
-    // [0]: コンテナフォーマット mpegts, flv, asf, webm
-    // [1]: 動画コーデック copy, libvpx, flv, libx264, wmv2
-    // [2]: 音声コーデック copy, libvorbis, libfdk_aac, wmav2
-    // [3]: 動画ビットレート
-    // [4]: 音声ビットレート
-    // [5]: 映像サイズ(例:1280x720)
-    // [6]: 映像フレームレート(例:24)
     private String getIncludeEncParams(String base, String[] params){
         if(params[0] != null)
             base += "f=" + params[0] + "&";
@@ -245,14 +217,6 @@ public class Chinachu4J {
             base += "r=" + params[6] + "&";
         return base.substring(0, base.length() - 1);
     }
-
-    /*
-    *
-    * 以下、jSONObjectから各オブジェクトに変換するやつ
-    *
-    * ぶっちゃけ、もっと綺麗にまとめたいよね。
-    *
-     */
 
     protected Program getProgram(JSONObject obj) throws JSONException{
         String id, category, title, subTitle, fullTitle, detail, episode;
@@ -285,7 +249,6 @@ public class Chinachu4J {
         return program;
     }
 
-    // JSONObjectからReserveを返却
     private Reserve getReserve(JSONObject obj) throws JSONException{
         Program program = getProgram(obj);
 
@@ -320,7 +283,6 @@ public class Chinachu4J {
         return reserve;
     }
 
-    // JSONObjectからRecordedを返却
     private Recorded getRecorded(JSONObject obj) throws JSONException{
         Program program = getProgram(obj);
         Tuner tuner = getTuner(obj.getJSONObject("tuner"));
@@ -376,7 +338,6 @@ public class Chinachu4J {
         return recording;
     }
 
-    // JSONObjectからTunerを返却（Recordedの取得に使用）
     private Tuner getTuner(JSONObject obj) throws JSONException{
         String name = obj.getString("name");
         boolean isScrambling = obj.getBoolean("isScrambling");
@@ -391,7 +352,6 @@ public class Chinachu4J {
         return tuner;
     }
 
-    // JSONObjectからRuleを返却
     private Rule getRule(JSONObject obj) throws JSONException{
         String[] types, categories, channels, ignore_channels, reserve_flags, ignore_flags;
         int start, end, min, max;

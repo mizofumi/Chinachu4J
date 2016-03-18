@@ -37,3 +37,7 @@ publish {
     desc = 'Wrappter of Chinachu API'
     website = 'https://github.com/mizofumi0411/chinachu4j'
 }
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
