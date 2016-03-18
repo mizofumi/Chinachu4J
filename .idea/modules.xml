@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Chinachu4J.iml" filepath="$PROJECT_DIR$/Chinachu4J.iml" />
+      <module fileurl="file://$PROJECT_DIR$/chinachu4j/chinachu4j.iml" filepath="$PROJECT_DIR$/chinachu4j/chinachu4j.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sample/sample.iml" filepath="$PROJECT_DIR$/sample/sample.iml" />
+    </modules>
+  </component>
+</project>
