@@ -1,4 +1,6 @@
 # Chinachu4J
+
+[![Join the chat at https://gitter.im/mizofumi0411/Chinachu4J](https://badges.gitter.im/mizofumi0411/Chinachu4J.svg)](https://gitter.im/mizofumi0411/Chinachu4J?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 Wrappter of Chinachu API
 
 ## Download
